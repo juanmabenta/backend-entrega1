@@ -1,17 +1,17 @@
 {
-  "name": "backend-entrega1",
+  "name": "entrega2-websockets",
   "version": "1.0.0",
   "type": "module",
-  "description": "API de productos y carritos con filesystem",
-  "main": "server.js",
   "scripts": {
-    "dev": "nodemon server.js",
-    "start": "node server.js"
+    "start": "node server.js",
+    "dev": "nodemon server.js"
   },
   "dependencies": {
-    "express": "^4.19.2"
+    "express": "^4.19.2",
+    "express-handlebars": "^7.1.2",
+    "socket.io": "^4.7.5"
   },
   "devDependencies": {
-    "nodemon": "^3.1.0"
+    "nodemon": "^3.0.1"
   }
 }

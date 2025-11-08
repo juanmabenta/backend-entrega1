@@ -1,15 +1,12 @@
 [
   {
-    "id": 1,
-    "title": "Remera Corteiz",
-    "description": "Black & White",
-    "code": "CRT-BW-01",
-    "price": 19999,
-    "status": true,
-    "stock": 15,
-    "category": "indumentaria",
-    "thumbnails": [
-      "/imgs/1.png"
-    ]
+    "id": "20924edd-cf44-4151-b7e5-37a781dae144",
+    "title": "remera",
+    "price": 5000
+  },
+  {
+    "id": "d6537bb7-83ca-413b-9400-64762e846c92",
+    "title": "gorra",
+    "price": 4500
   }
 ]

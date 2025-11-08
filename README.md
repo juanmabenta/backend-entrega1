@@ -1,9 +1,21 @@
-# Entrega 1 – API Productos & Carritos (Filesystem)
+# Entrega 2 — Handlebars + WebSockets
 
-API en **Node.js + Express** (puerto **8080**) con persistencia en `/data/products.json` y `/data/carts.json`.
-
-## Instalación y ejecución
+## Instalación
 ```bash
-npm install
+npm i
+npm i express-handlebars socket.io
+```
+
+## Ejecución
+```bash
+npm run start
+# o
 npm run dev
-# Servidor: http://localhost:8080
+```
+
+## Endpoints
+- `GET /` -> Home con lista de productos (SSR)
+- `GET /realtimeproducts` -> Vista con updates en vivo
+- `POST /api/products` -> Crea producto `{ "title": "...", "price": 123 }`
+- `DELETE /api/products/:pid` -> Elimina producto
+```

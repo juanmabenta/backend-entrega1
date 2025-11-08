@@ -1,60 +1,61 @@
-// src/routes/products.router.js
-import { Router } from "express";
-import ProductManager from "../managers/ProductManager.js";
+import { Router } from 'express';
+import ProductManager from '../managers/ProductManager.js';
 
 const router = Router();
-const productManager = new ProductManager();
+const pm = new ProductManager();
 
-// GET /api/products/
-router.get("/", async (req, res) => {
+router.get('/', async (req, res) => {
   try {
-    const products = await productManager.getAll();
-    res.json(products);
+    const all = await pm.getAll();
+    const { limit } = req.query;
+    const list = limit ? all.slice(0, Number(limit)) : all;
+    res.json({ status: 'ok', payload: list });
   } catch (e) {
-    res.status(500).json({ error: e.message });
+    res.status(500).json({ status: 'error', error: e.message });
   }
 });
 
-// GET /api/products/:pid
-router.get("/:pid", async (req, res) => {
+router.get('/:pid', async (req, res) => {
   try {
-    const product = await productManager.getById(req.params.pid);
-    if (!product) return res.status(404).json({ error: "Producto no encontrado" });
-    res.json(product);
+    const all = await pm.getAll();
+    const prod = all.find(p => p.id === req.params.pid);
+    if (!prod) return res.status(404).json({ status: 'error', error: 'no existe' });
+    res.json({ status: 'ok', payload: prod });
   } catch (e) {
-    res.status(500).json({ error: e.message });
+    res.status(500).json({ status: 'error', error: e.message });
   }
 });
 
-// POST /api/products/
-router.post("/", async (req, res) => {
+router.post('/', async (req, res) => {
   try {
-    const created = await productManager.create(req.body);
-    res.status(201).json(created);
+    const { title, price } = req.body;
+    if (!title || price == null) {
+      return res.status(400).json({ status: 'error', error: 'title y price son obligatorios' });
+    }
+    const created = await pm.add({ title, price: Number(price) });
+
+    const io = req.app.get('io');
+    const products = await pm.getAll();
+    io.emit('products:update', products);
+
+    res.status(201).json({ status: 'ok', payload: created });
   } catch (e) {
-    res.status(e.status || 500).json({ error: e.message });
+    res.status(500).json({ status: 'error', error: e.message });
   }
 });
 
-// PUT /api/products/:pid (no se puede actualizar/eliminar id)
-router.put("/:pid", async (req, res) => {
+router.delete('/:pid', async (req, res) => {
   try {
-    const updated = await productManager.update(req.params.pid, req.body);
-    if (!updated) return res.status(404).json({ error: "Producto no encontrado" });
-    res.json(updated);
-  } catch (e) {
-    res.status(500).json({ error: e.message });
-  }
-});
+    const removed = await pm.deleteById(req.params.pid);
+    if (!removed) return res.status(404).json({ status: 'error', error: 'no existe' });
 
-// DELETE /api/products/:pid
-router.delete("/:pid", async (req, res) => {
-  try {
-    const ok = await productManager.delete(req.params.pid);
-    if (!ok) return res.status(404).json({ error: "Producto no encontrado" });
-    res.json({ status: "deleted" });
+    const io = req.app.get('io');
+    const products = await pm.getAll();
+    io.emit('products:update', products);
+
+    res.json({ status: 'ok', payload: removed });
   } catch (e) {
-    res.status(500).json({ error: e.message });
+    res.status(500).json({ status: 'error', error: e.message });
   }
 });
 
