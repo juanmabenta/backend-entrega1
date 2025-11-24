@@ -1,7 +1,70 @@
+<nav>
+  <a href="/products{{#if cartId}}?cid={{cartId}}{{/if}}">Productos</a> |
+  <a href="/realtimeproducts">Crear productos</a> |
+  <a href="/carts">Carritos</a>
+</nav>
+
 <h1>Home: Productos</h1>
+
+{{#if cartId}}
+  <p><strong>Carrito activo:</strong> {{cartId}}</p>
+{{else}}
+  <p>No hay carrito activo. Podés crear uno en <a href="/carts">Carritos</a>.</p>
+{{/if}}
+
 <ul>
   {{#each products}}
-    <li><strong>{{this.title}}</strong> — $ {{this.price}} (id: {{this.id}})</li>
+    <li>
+      <strong>{{this.title}}</strong> — $ {{this.price}}
+      (id: {{this._id}})
+      |
+      {{!-- Ver detalle manteniendo el carrito activo si existe --}}
+      <a href="/products/{{this._id}}{{#if ../cartId}}?cid={{../cartId}}{{/if}}">
+        Ver detalle
+      </a>
+
+      {{!-- Botón "Agregar al carrito" solo si hay carrito activo --}}
+      {{#if ../cartId}}
+        <form method="POST"
+              action="/carts/{{../cartId}}/products/{{this._id}}"
+              style="display:inline;">
+          <input type="hidden" name="quantity" value="1" />
+          <button type="submit">Agregar al carrito</button>
+        </form>
+      {{/if}}
+
+      {{!-- Botón para eliminar el producto de la base --}}
+      <form method="POST"
+            action="/products/{{this._id}}/delete"
+            style="display:inline;"
+            onsubmit="return confirm('¿Eliminar este producto?');">
+        <input type="hidden" name="cid" value="{{../cartId}}" />
+        <button type="submit">Eliminar producto</button>
+      </form>
+    </li>
   {{/each}}
 </ul>
-<p><a href="/realtimeproducts">Ir a Real-Time Products</a></p>
+
+<hr />
+
+<div>
+  {{#if hasPrevPage}}
+    <a href="/products?page={{prevPage}}&limit={{limit}}&sort={{sort}}&query={{query}}{{#if cartId}}&cid={{cartId}}{{/if}}">
+      ⬅ Anterior
+    </a>
+  {{/if}}
+
+  <span> Página {{page}} de {{totalPages}} </span>
+
+  {{#if hasNextPage}}
+    <a href="/products?page={{nextPage}}&limit={{limit}}&sort={{sort}}&query={{query}}{{#if cartId}}&cid={{cartId}}{{/if}}">
+      Siguiente ➡
+    </a>
+  {{/if}}
+</div>
+
+<hr />
+
+<p>
+  <a href="/realtimeproducts">Ir a Real-Time Products</a>
+</p>

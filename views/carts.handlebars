@@ -1,0 +1,29 @@
+<nav>
+  <a href="/products">Productos</a> |
+  <a href="/realtimeproducts">Crear productos</a> |
+  <a href="/carts">Carritos</a>
+</nav>
+
+<h1>Carritos</h1>
+
+<form method="POST" action="/carts/create">
+  <button type="submit">Crear carrito nuevo</button>
+</form>
+
+<hr />
+
+{{#if carts.length}}
+  <ul>
+    {{#each carts}}
+      <li>
+        <strong>{{this._id}}</strong>
+        |
+        <a href="/carts/{{this._id}}">Ver carrito</a>
+        |
+        <a href="/products?cid={{this._id}}">Usar este carrito en productos</a>
+      </li>
+    {{/each}}
+  </ul>
+{{else}}
+  <p>No hay carritos. Creá uno con el botón de arriba.</p>
+{{/if}}

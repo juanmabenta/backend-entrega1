@@ -1,0 +1,50 @@
+<nav>
+  <a href="/products?cid={{cartId}}">Productos</a> |
+  <a href="/realtimeproducts">Crear productos</a> |
+  <a href="/carts">Carritos</a>
+</nav>
+
+<h1>Carrito {{cartId}}</h1>
+
+<p>
+  <a href="/products?cid={{cartId}}">Ir a productos usando este carrito</a>
+</p>
+
+{{#if products.length}}
+  <form method="POST" action="/carts/{{cartId}}/empty" style="margin-bottom: 1rem;">
+    <button type="submit" onclick="return confirm('¿Vaciar todo el carrito?');">
+      Vaciar carrito
+    </button>
+  </form>
+
+  <table border="1" cellspacing="0" cellpadding="6">
+    <thead>
+      <tr>
+        <th>Producto</th>
+        <th>Precio</th>
+        <th>Cantidad</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each products}}
+        <tr>
+          <td>{{this.product.title}}</td>
+          <td>$ {{this.product.price}}</td>
+          <td>{{this.quantity}}</td>
+          <td>
+            <form method="POST"
+                  action="/carts/{{../cartId}}/products/{{this.product._id}}/delete"
+                  style="display:inline;">
+              <button type="submit" onclick="return confirm('¿Eliminar este producto del carrito?');">
+                Eliminar del carrito
+              </button>
+            </form>
+          </td>
+        </tr>
+      {{/each}}
+    </tbody>
+  </table>
+{{else}}
+  <p>El carrito está vacío.</p>
+{{/if}}

@@ -1,0 +1,35 @@
+<nav>
+  <a href="/products{{#if cartId}}?cid={{cartId}}{{/if}}">Productos</a> |
+  <a href="/realtimeproducts">Crear productos</a> |
+  <a href="/carts">Carritos</a>
+</nav>
+
+<h1>Detalle de producto</h1>
+
+<h2>{{product.title}}</h2>
+
+<p><strong>Precio:</strong> $ {{product.price}}</p>
+<p><strong>Categoría:</strong> {{product.category}}</p>
+<p><strong>Stock:</strong> {{product.stock}}</p>
+<p><strong>Descripción:</strong> {{product.description}}</p>
+<p><strong>ID:</strong> {{product._id}}</p>
+
+<hr />
+
+{{#if cartId}}
+  <h3>Agregar al carrito</h3>
+  <form method="POST" action="/carts/{{cartId}}/products/{{product._id}}">
+    <label for="qty">Cantidad:</label>
+    <input id="qty" type="number" name="quantity" value="1" min="1" />
+    <button type="submit">Agregar al carrito</button>
+  </form>
+{{else}}
+  <p>
+    No hay carrito activo. Podés crear uno en
+    <a href="/carts">Carritos</a> y luego volver acá.
+  </p>
+{{/if}}
+
+<hr />
+
+<p><a href="/products{{#if cartId}}?cid={{cartId}}{{/if}}">⬅ Volver a la lista de productos</a></p>
